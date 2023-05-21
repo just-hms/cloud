@@ -21,7 +21,9 @@ mvn clean package
 ```shell
 # go where the pom file is
 scp target/executable.jar hadoop@cloud-hms:
-scp files hadoop@cloud-hms:
+
+# copy the data files 
+scp path_to_file hadoop@cloud-hms:
 
 # login to hadoop
 ssh cloud-hms
