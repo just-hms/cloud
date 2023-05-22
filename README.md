@@ -38,8 +38,8 @@ start-yarn.sh
 hadoop fs -put pg100.txt pg100.txt
 
 # remove the old output
-hadoop fs -rm output/
-
+hadoop fs -rm -r output/
+ 
 # launch the executable
 hadoop jar wordcount-1.0-SNAPSHOT.jar it.unipi.hadoop.WordCount pg100.txt output
 
