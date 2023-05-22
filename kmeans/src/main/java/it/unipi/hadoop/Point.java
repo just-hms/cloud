@@ -14,7 +14,7 @@ public class Point {
 
     public static Point parsePoint(String value) {
         List<Double> position = new ArrayList<>();
-        StringTokenizer tokenizer = new StringTokenizer(value, ",");
+        StringTokenizer tokenizer = new StringTokenizer(value, ",;");
         while (tokenizer.hasMoreTokens()) {
             position.add(Double.parseDouble(tokenizer.nextToken()));
         }
@@ -24,18 +24,21 @@ public class Point {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        String prefix = "";
+        String prefix = "[";
         for (Double d : position) {
             sb.append(prefix);
             prefix = ",";
             sb.append(d);
         }
+        sb.append("]");
         return sb.toString();
     }
 
     public double distance(Point next) {
         if (this.position.length != next.position.length) {
-            throw new IllegalArgumentException("Data points have different dimensions");
+            throw new IllegalArgumentException(
+                String.format("Data points have different dimensions %s %s", this.toString(),  next.toString())
+            );
         }
 
         double squaredSum = 0.0;

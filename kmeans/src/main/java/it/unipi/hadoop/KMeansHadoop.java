@@ -27,6 +27,9 @@ public class KMeansHadoop {
             String[] centroidString = context.getConfiguration().getStrings("centroids", "");
             centroids = new Point[centroidString.length];
             for (int i = 0; i < centroidString.length; i++) {
+                if (centroidString[i] == ""){
+                    break;
+                }
                 centroids[i] = Point.parsePoint(centroidString[i]);
             }
         }
@@ -36,7 +39,12 @@ public class KMeansHadoop {
 
             final StringTokenizer itr = new StringTokenizer(value.toString(), "\n");
             while (itr.hasMoreTokens()) {
-                Point p = Point.parsePoint(itr.nextToken());
+                String s = itr.nextToken();
+                if (s == ""){
+                    break;
+                }
+                
+                Point p = Point.parsePoint(s);
 
                 // Find the nearest centroid for the data point
                 int idx = p.nearest(centroids);
