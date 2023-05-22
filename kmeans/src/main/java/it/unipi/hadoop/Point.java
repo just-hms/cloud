@@ -6,9 +6,9 @@ import java.util.StringTokenizer;
 
 public class Point {
 
-    private List<Double> position;
+    private Double[] position;
 
-    public Point(List<Double> position) {
+    public Point(Double[] position) {
         this.position = position;
     }
 
@@ -18,38 +18,38 @@ public class Point {
         while (tokenizer.hasMoreTokens()) {
             position.add(Double.parseDouble(tokenizer.nextToken()));
         }
-        return new Point(position);
+        return new Point(position.toArray(new Double[0]));
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < position.size(); i++) {
-            sb.append(position.get(i));
-            if (i < position.size() - 1) {
-                sb.append(", ");
-            }
+        String prefix = "";
+        for (Double d : position) {
+            sb.append(prefix);
+            prefix = ",";
+            sb.append(d);
         }
         return sb.toString();
     }
 
     public double distance(Point next) {
-        if (this.position.size() != next.position.size()) {
+        if (this.position.length != next.position.length) {
             throw new IllegalArgumentException("Data points have different dimensions");
         }
 
         double squaredSum = 0.0;
-        for (int i = 0; i < this.position.size(); i++) {
-            squaredSum += Math.pow(this.position.get(i) - next.position.get(i), 2);
+        for (int i = 0; i < this.position.length; i++) {
+            squaredSum += Math.pow(this.position[i] - next.position[i], 2);
         }
         return Math.sqrt(squaredSum);
     }
 
-    public int nearest(List<Point> points) {
+    public int nearest(Point[] points) {
         int nearestIndex = 0;
-        double minDistance = this.distance(points.get(0));
-        for (int i = 1; i < points.size(); i++) {
-            double distance = this.distance(points.get(i));
+        double minDistance = this.distance(points[0]);
+        for (int i = 1; i < points.length; i++) {
+            double distance = this.distance(points[i]);
             if (distance >= minDistance) {
                 continue;
             }
@@ -59,27 +59,25 @@ public class Point {
         return nearestIndex;
     }
 
-    public static Point center(List<Point> points) {
-        int dimensions = points.get(0).position.size();
-        List<Double> centerPosition = new ArrayList<>(dimensions);
+    public static Point Average(Iterable<Point> points) {
+        int dimensions = points.iterator().next().position.length;
+        Double[] centerPosition = new Double[dimensions];
 
-        // Initialize the center position with zeros
-        for (int i = 0; i < dimensions; i++) {
-            centerPosition.add(0.0);
-        }
-
+        int count = 0;
+    
         // Sum up the positions of all points
         for (Point point : points) {
             for (int i = 0; i < dimensions; i++) {
-                centerPosition.set(i, centerPosition.get(i) + point.position.get(i));
+                centerPosition[i] += point.position[i];
             }
+            count++;
         }
-
+    
         // Divide the sum by the number of points to get the average
         for (int i = 0; i < dimensions; i++) {
-            centerPosition.set(i, centerPosition.get(i) / points.size());
+            centerPosition[i] /=  count;
         }
-
+    
         return new Point(centerPosition);
-    }
+    }    
 }

@@ -1,8 +1,10 @@
 package it.unipi.hadoop;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -15,58 +17,59 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class KMeansHadoop {
-    public static class KMeansMapper extends Mapper<Object, Text, IntWritable, Text> {
-        private List<Point> centroids;
+    public static class KMeansMapper extends Mapper<Object, Text, IntWritable, Point> {
+        private Point[] centroids;
 
         @Override
         protected void setup(Context context) throws IOException, InterruptedException {
-            String[] centroidString = context.getConfiguration().getStrings("centroids", "");
 
-            // TODO: check me
-            for (String value : centroidString) {
-                centroids.add(Point.parsePoint(value));
+            // parse input random centroids
+            String[] centroidString = context.getConfiguration().getStrings("centroids", "");
+            centroids = new Point[centroidString.length];
+            for (int i = 0; i < centroidString.length; i++) {
+                centroids[i] = Point.parsePoint(centroidString[i]);
             }
         }
 
         @Override
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-            // Parse data point from the input value
-            Point p = Point.parsePoint(value.toString());
 
-            // Find the nearest centroid for the data point
-            int nearestCentroidIndex = p.nearest(centroids);
+            final StringTokenizer itr = new StringTokenizer(value.toString(), "\n");
+            while (itr.hasMoreTokens()) {
+                Point p = Point.parsePoint(itr.nextToken());
 
-            // Emit the nearest centroid index and data point
-            context.write(new IntWritable(nearestCentroidIndex), value);
+                // Find the nearest centroid for the data point
+                int idx = p.nearest(centroids);
+
+                // Emit the nearest centroid index and data point
+                context.write(new IntWritable(idx), p);
+            }
         }
     }
 
-    public static class KMeansReducer extends Reducer<IntWritable, Text, IntWritable, Text> {
+    public static class KMeansReducer extends Reducer<IntWritable, Point, IntWritable, Text> {
         @Override
-        public void reduce(IntWritable key, Iterable<Text> values, Context context)
+        protected void reduce(IntWritable key, Iterable<Point> values, Context context)
                 throws IOException, InterruptedException {
-            // Accumulate all data points for the same centroid
-            List<Point> points = new ArrayList<>();
-            for (Text value : values) {
-                Point p = Point.parsePoint(value.toString());
-                points.add(p);
-            }
 
-            Point newCentroid = Point.center(points);
-
-            // Emit the new centroid
+            Point newCentroid = Point.Average(values);
             context.write(key, new Text(newCentroid.toString()));
         }
     }
 
     public static void main(String[] args) throws Exception {
 
+        // list of k centroids
+        // list of points n
+        // every point has d dimensions
+
         Configuration conf = new Configuration();
 
-        // TODO get the centroids from a file
-        conf.setStrings("centroids", "0.9, 1.0", "0.9, 1.0");
+        List<String> centroids = Files.readAllLines(Paths.get(args[2]));
+        conf.setStrings("centroids", centroids.toArray(new String[0]));
 
-        Job job = Job.getInstance(conf, "KMeans Clustering");
+        Job job = Job.getInstance(conf, "KMeans");
+
         job.setJarByClass(KMeansHadoop.class);
         job.setMapperClass(KMeansMapper.class);
         job.setReducerClass(KMeansReducer.class);
@@ -77,6 +80,7 @@ public class KMeansHadoop {
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
+        // add stop conditions
         System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
 }
