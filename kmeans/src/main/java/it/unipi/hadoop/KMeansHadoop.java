@@ -73,7 +73,7 @@ public class KMeansHadoop {
 
         Configuration conf = new Configuration();
 
-        List<String> centroids = Files.readAllLines(Paths.get(args[2]));
+        List<String> centroids = Files.readAllLines(Paths.get(args[0]));
         conf.setStrings("centroids", centroids.toArray(new String[0]));
 
         Job job = Job.getInstance(conf, "KMeans");
@@ -85,8 +85,8 @@ public class KMeansHadoop {
         job.setOutputKeyClass(IntWritable.class);
         job.setOutputValueClass(Text.class);
 
-        FileInputFormat.addInputPath(job, new Path(args[0]));
-        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        FileInputFormat.addInputPath(job, new Path(args[1]));
+        FileOutputFormat.setOutputPath(job, new Path(args[2]));
 
         // add stop conditions
         System.exit(job.waitForCompletion(true) ? 0 : 1);
