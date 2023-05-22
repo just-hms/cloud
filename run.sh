@@ -23,7 +23,5 @@ ssh hadoop@cloud-hms << EOF
 EOF
 
 echo "Getting the output"
-
-cd ..
 mkdir -p data/$OUTPUT
 scp -i $SSH_KEY -r hadoop@cloud-hms:$OUTPUT data/
