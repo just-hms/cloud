@@ -1,7 +1,6 @@
 PROJECT="kmeans"
 OUTPUT="output-$(uuidgen)"
 JAR="$PROJECT-1.0-SNAPSHOT.jar"
-CLASS="it.unipi.hadoop.KMeansHadoop"
 SSH_KEY="~/.ssh/keys/cloud/key"
 
 echo "Building..."
@@ -23,7 +22,7 @@ fi
 echo "Running Hadoop job"
 ssh hadoop@cloud-hms << EOF
     cd repos
-    /opt/hadoop/bin/hadoop jar $JAR $CLASS centroids.csv data.csv $OUTPUT
+    /opt/hadoop/bin/hadoop jar $JAR centroids.csv data.csv $OUTPUT
 
     /opt/hadoop/bin/hdfs dfs -get $OUTPUT $OUTPUT
     /opt/hadoop/bin/hdfs dfs -rm -r $OUTPUT
