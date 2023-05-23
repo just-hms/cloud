@@ -10,7 +10,7 @@ import java.util.StringTokenizer;
 import org.apache.hadoop.io.Writable;
 
 
-public class Point implements Writable,Comparable<Point>{
+public class Point implements Writable {
 
     private Double[] position;
 
@@ -104,21 +104,7 @@ public class Point implements Writable,Comparable<Point>{
         return new Point(centerPosition);
     }
 
-    @Override
-    public int compareTo(Point other) {
-        int length = position.length;
-        if (length != other.position.length) {
-            return Integer.compare(length, other.position.length);
-        }
-        for (int i = 0; i < length; i++) {
-            int result = Double.compare(position[i], other.position[i]);
-            if (result != 0) {
-                return result;
-            }
-        }
-        return 0;
-    }
-
+    // TODO: fix me
     @Override
     public void write(DataOutput out) throws IOException {
         out.writeInt(position.length);
