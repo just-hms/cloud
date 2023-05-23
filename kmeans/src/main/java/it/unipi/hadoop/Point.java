@@ -24,7 +24,7 @@ public class Point implements Writable {
         return position.length;
     }
     
-    public static Point parsePoint(String value) {
+    public static Point fromCSV(String value) {
         List<Double> position = new ArrayList<>();
         StringTokenizer tokenizer = new StringTokenizer(value, ";");
         while (tokenizer.hasMoreTokens()) {
@@ -37,17 +37,20 @@ public class Point implements Writable {
 
         return new Point(position.toArray(new Double[0]));
     }
-
+    
     @Override
     public String toString() {
+        return this.toCSV();
+    }
+    
+    public String toCSV() {
         StringBuilder sb = new StringBuilder();
-        String prefix = "[";
-        for (Double d : position) {
+        String prefix = "";
+        for (Double d : this.position) {
             sb.append(prefix);
-            prefix = ",";
+            prefix = ";";
             sb.append(d);
         }
-        sb.append("]");
         return sb.toString();
     }
 
@@ -104,7 +107,7 @@ public class Point implements Writable {
         return new Point(centerPosition);
     }
 
-    // TODO: fix me
+    // TODO this is not used
     @Override
     public void write(DataOutput out) throws IOException {
         out.writeInt(position.length);
@@ -113,7 +116,6 @@ public class Point implements Writable {
         }
     }
 
-    // TODO: check if you can use this to get Points in input in the map phase
     @Override
     public void readFields(DataInput in) throws IOException {
         int length = in.readInt();

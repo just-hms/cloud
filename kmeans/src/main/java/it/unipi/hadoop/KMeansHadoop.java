@@ -22,7 +22,7 @@ public class KMeansHadoop {
                 if (centroidString[i] == ""){
                     break;
                 }
-                centroids[i] = Point.parsePoint(centroidString[i]);
+                centroids[i] = Point.fromCSV(centroidString[i]);
             }
 
             if (centroids.length == 0){
@@ -34,7 +34,7 @@ public class KMeansHadoop {
 
         @Override
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-            Point p = Point.parsePoint(value.toString());
+            Point p = Point.fromCSV(value.toString());
             if (p == null){
                 return;
             }
