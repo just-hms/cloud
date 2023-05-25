@@ -15,14 +15,18 @@ public class KMeansHadoop {
         protected void setup(Context context) throws IOException, InterruptedException {
 
             // parse input random centroids
-            String[] centroidString = context.getConfiguration().getStrings("centroids", "");
+            String[] centroidsString = context.getConfiguration().getStrings("centroids", "");
 
-            centroids = new Point[centroidString.length];
-            for (int i = 0; i < centroidString.length; i++) {
-                if (centroidString[i] == ""){
+            for (String string : centroidsString) {
+                System.out.println(string);            
+            }
+
+            centroids = new Point[centroidsString.length];
+            for (int i = 0; i < centroidsString.length; i++) {
+                if (centroidsString[i] == ""){
                     break;
                 }
-                centroids[i] = Point.fromCSV(centroidString[i]);
+                centroids[i] = Point.fromCSV(centroidsString[i]);
             }
 
             if (centroids.length == 0){

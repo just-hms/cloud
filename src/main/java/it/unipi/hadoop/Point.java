@@ -20,10 +20,12 @@ public class Point implements Writable {
         this.position = position;
     }
 
-    public int Size() {
+    // size returns the size of the point
+    public int size() {
         return position.length;
     }
-    
+
+    // fromCSV given a point formatted in csv returns a point
     public static Point fromCSV(String value) {
         List<Double> position = new ArrayList<>();
         StringTokenizer tokenizer = new StringTokenizer(value, ",");
@@ -43,6 +45,7 @@ public class Point implements Writable {
         return this.toCSV();
     }
 
+    // toCSV return a csv formatted string composed by the point positions
     public String toCSV() {
         StringBuilder sb = new StringBuilder();
         String prefix = "";
@@ -53,16 +56,9 @@ public class Point implements Writable {
         }
         return sb.toString();
     }
-    
-    public static String[] ClusterToCSV(Point[] points) {
-        String[] res = new String[points.length];
-        for (int i = 0; i < res.length; i++) {
-            res[i] = points[i].toCSV();
-        }
-        return res;
-    }
 
-    public double distance(Point other) {
+    // distance returns the euclidean distance between the point and another one
+    public double distance2(Point other) throws IllegalArgumentException{
         if (this.position.length != other.position.length) {
             throw new IllegalArgumentException(
                 String.format("Data points have different dimensions %s %s", this.toString(),  other.toString())
@@ -76,12 +72,13 @@ public class Point implements Writable {
         return Math.sqrt(squaredSum);
     }
 
+    // nearest returns the index of the nearest points
     public int nearest(Point[] points) {
         int nearestIndex = 0;
-        double minDistance = this.distance(points[0]);
+        double minDistance = this.distance2(points[0]);
 
         for (int i = 1; i < points.length; i++) {
-            double distance = this.distance(points[i]);
+            double distance = this.distance2(points[i]);
             if (distance >= minDistance) {
                 continue;
             }
@@ -91,6 +88,7 @@ public class Point implements Writable {
         return nearestIndex;
     }
 
+    // average returns the average of provided points
     public static Point average(Iterable<Point> points, int dimensions) {
         Double[] centerPosition = new Double[dimensions];
         for (int i = 0; i < centerPosition.length; i++) {

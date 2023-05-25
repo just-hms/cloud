@@ -1,5 +1,5 @@
 OUTPUT="output-$(uuidgen)"
-JAR="kmeans-1.0-SNAPSHOT.jar"
+JAR="cloud-1.0-SNAPSHOT.jar"
 SSH_KEY="~/.ssh/keys/cloud/key"
 
 # TODO had check for edits
@@ -24,12 +24,12 @@ datset="${2##*/}"
 echo "Running Hadoop job"
 ssh hadoop@cloud-hms << EOF
     cd repos
+    /opt/hadoop/bin/hdfs dfs -rm -r output
+
     /opt/hadoop/bin/hdfs dfs -put -f $centroidsFilename
     /opt/hadoop/bin/hdfs dfs -put -f $datset
     
-    /opt/hadoop/bin/hadoop jar $JAR $centroidsFilename $datset $OUTPUT
-
-    /opt/hadoop/bin/hdfs dfs -rm -r $OUTPUT
+    /opt/hadoop/bin/hadoop jar $JAR $centroidsFilename $datset output
 EOF
 
 

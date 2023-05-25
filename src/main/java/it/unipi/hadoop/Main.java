@@ -21,28 +21,40 @@ import org.apache.hadoop.fs.FileSystem;
 
 public class Main {
 
-    static int MAX_ITERATION = 5;
-    static Double STOP_TRESHOLD = 0.001;
 
     public static void main(String[] args) throws Exception {
 
         // get centroids
-        List<String> centroidsString = Files.readAllLines(Paths.get(args[0]));
-        
+        List<String> lines = Files.readAllLines(Paths.get(args[0]));
+
         // get starting centroids
-        Point[] centroids = new Point[centroidsString.size()];
+        Point[] centroids = new Point[lines.size()];
         for (int i = 0; i < centroids.length; i++) {
-            centroids[i] = Point.fromCSV(centroidsString.get(i));
+            centroids[i] = Point.fromCSV(lines.get(i));
         }
+        
+        // set the costants
+        final int maxIteration = 5;
+        final Double stoppingTreshold = 0.001;
+        final int dimensions = centroids[0].size();
+        final int K = centroids.length;
 
         // start k-means
         int i = 0;
-        for (; i < MAX_ITERATION; i++) {
+        for (; i < maxIteration; i++) {
             
             // infer configuration from centroids
             Configuration conf = new Configuration();
-            conf.setStrings("centroids", Point.ClusterToCSV(centroids));
-            conf.setInt("dimensions", centroids[0].Size());
+
+            // convert the centroids to string
+            String[] centroidCfg = new String[K];
+            for (int j = 0; j < K; j++) {
+                centroidCfg[j] = centroids[j].toCSV();
+            }  
+
+            // add config to run
+            conf.setStrings("centroids", centroidCfg);
+            conf.setInt("dimensions", dimensions);
 
             Job job = Job.getInstance(conf, "KMeans");
 
@@ -52,68 +64,72 @@ public class Main {
 
             job.setOutputKeyClass(IntWritable.class);
             job.setOutputValueClass(Point.class);
-            job.setNumReduceTasks(centroidsString.size());
 
-            
-            // get the centroids from the last input
-            Path input;
-            if (i == 0) {
-                input = new Path(args[1]) ;
-            }
-            else  {
-                input = new Path(args[1], "iteration"+i) ;
-            }
+            // set the number of reducer to K
+            job.setNumReduceTasks(K);
 
+
+            // set the input as provided by the user
+            Path input = new Path(args[1]);
+            // each iteration create a subfolder for the output
             Path output = new Path(args[2], "iteration"+(i+1));
 
-            // fix me
             FileInputFormat.addInputPath(job, input);
             FileOutputFormat.setOutputPath(job, output);
 
-            Boolean res = job.waitForCompletion(false);
+            Boolean res = job.waitForCompletion(true);
             if (!res) {
-                // TODO checke me
                 System.err.println("Error during iteration " + i);
                 // error during job
                 System.exit(1);
             }
-            
+
+            // extract the hadoop's run outputs
             FileSystem fs = FileSystem.get(conf);
-            Point[] newcentroids = new Point[centroidsString.size()];
+            Point[] newcentroids = new Point[K];
             
             for (FileStatus file : fs.listStatus(output)) {
+                // if not a file skip it
                 if (!file.isFile()) {
                     continue;
                 }
-                if (file.toString().endsWith("ESS")) {
+                // skip the success file
+                if (file.toString() == "_SUCCESS") {
                     continue;
                 }
+
                 // Open an input stream for reading the file
                 Path filePath = file.getPath();
                 BufferedReader br = new BufferedReader(new InputStreamReader(fs.open(filePath)));
                 String line = br.readLine();
 
-                // TODO: check me but each file should have one line formatted like this
-                //  key [p,o,s,i,t,i,o,n]
+                // each file should have one line formatted like this
+                //  ```
+                //  key1    1.01,23.31,-12
+                //  key2    ...
+                //  ```
+
                 newcentroids[i] = Point.fromCSV(line.split("\t")[1]);
 
                 // Close the input stream
                 br.close();
             }
 
+            // get the distance between the new and the last centroids
             Double distance = 0.0;
-            for (int j = 0; j < newcentroids.length; j++) {
-                distance+=Math.abs(newcentroids[i].distance(centroids[i]));
+            for (int j = 0; j < K; j++) {
+                distance+=Math.abs(newcentroids[i].distance2(centroids[i]));
             }
 
-            if(distance < STOP_TRESHOLD){
+            // if it's less exit gracefully
+            if((distance / K) < stoppingTreshold){
                 break;
             }
 
+            // if not do another iteration with the new centroids
             centroids = newcentroids;
         }
         
-        System.err.println(centroids);
-
+        System.out.println(centroids);            
     }
 }
