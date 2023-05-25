@@ -46,8 +46,6 @@ public class KMeansHadoop {
         }
     }
 
-    // TODO maybe add a shuffle
-
     public static class KMeansReducer extends Reducer<IntWritable, Point, IntWritable, Point> {
         
         @Override

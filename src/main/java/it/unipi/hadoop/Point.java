@@ -26,7 +26,7 @@ public class Point implements Writable {
     
     public static Point fromCSV(String value) {
         List<Double> position = new ArrayList<>();
-        StringTokenizer tokenizer = new StringTokenizer(value, ";");
+        StringTokenizer tokenizer = new StringTokenizer(value, ",");
         while (tokenizer.hasMoreTokens()) {
             position.add(Double.parseDouble(tokenizer.nextToken()));
         }
@@ -42,16 +42,24 @@ public class Point implements Writable {
     public String toString() {
         return this.toCSV();
     }
-    
+
     public String toCSV() {
         StringBuilder sb = new StringBuilder();
         String prefix = "";
         for (Double d : this.position) {
             sb.append(prefix);
-            prefix = ";";
+            prefix = ",";
             sb.append(d);
         }
         return sb.toString();
+    }
+    
+    public static String[] ClusterToCSV(Point[] points) {
+        String[] res = new String[points.length];
+        for (int i = 0; i < res.length; i++) {
+            res[i] = points[i].toCSV();
+        }
+        return res;
     }
 
     public double distance(Point other) {
@@ -107,7 +115,6 @@ public class Point implements Writable {
         return new Point(centerPosition);
     }
 
-    // TODO this is not used
     @Override
     public void write(DataOutput out) throws IOException {
         out.writeInt(position.length);
