@@ -11,7 +11,13 @@ import matplotlib.pyplot as plt
 from sklearn.datasets import make_blobs
 from numpy import savetxt
 
-
+#INSTRUCTIONS
+#
+# Copy and paste in "values" a new dictionary (don't forget the "," )
+# Set the desired values
+# Command line   :   py dataset_generator.py
+# Generates NAME.csv 
+#
 
 
 if __name__ == '__main__':
@@ -44,6 +50,6 @@ if __name__ == '__main__':
         )
 
         filename = values[i]['NAME'] + ".csv"
-        savetxt(filename, generated_dataset, delimiter=',')
+        savetxt(filename, generated_dataset, delimiter=';')
         
         print(generated_dataset)
