@@ -1,2 +1,0 @@
-# cloud
-Cloud computing project
