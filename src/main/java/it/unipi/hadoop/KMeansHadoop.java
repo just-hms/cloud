@@ -7,29 +7,29 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 
+
 public class KMeansHadoop {
+
     public static class KMeansMapper extends Mapper<Object, Text, IntWritable, Point> {
         private Point[] centroids;
 
         @Override
         protected void setup(Context context) throws IOException, InterruptedException {
+            
+            // recover the config from the config
+            String[] centroidCfg = context.getConfiguration().getStrings("centroids", "");
 
-            // parse input random centroids
-            String[] centroidsString = context.getConfiguration().getStrings("centroids", "");
-
-            for (String string : centroidsString) {
-                System.out.println(string);            
-            }
-
-            centroids = new Point[centroidsString.length];
-            for (int i = 0; i < centroidsString.length; i++) {
-                if (centroidsString[i] == ""){
-                    break;
+            centroids = new Point[centroidCfg.length];
+            for (int i = 0; i < centroidCfg.length; i++) {
+                if (centroidCfg[i] == "") {
+                    throw new IllegalArgumentException(
+                        String.format("Provided empty centroid")
+                    );
                 }
-                centroids[i] = Point.fromCSV(centroidsString[i]);
+                centroids[i] = Point.parsePoint(centroidCfg[i]);
             }
 
-            if (centroids.length == 0){
+            if (centroids.length == 0) {
                 throw new IllegalArgumentException(
                     String.format("Cannot perform %d-means", centroids.length)
                 );
@@ -38,8 +38,8 @@ public class KMeansHadoop {
 
         @Override
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-            Point p = Point.fromCSV(value.toString());
-            if (p == null){
+            Point p = Point.parsePoint(value.toString());
+            if (p == null) {
                 return;
             }
             // Find the nearest centroid for the data point
@@ -51,20 +51,14 @@ public class KMeansHadoop {
     }
 
     public static class KMeansReducer extends Reducer<IntWritable, Point, IntWritable, Point> {
-        
+
         @Override
         protected void reduce(IntWritable key, Iterable<Point> cluster, Context context)
                 throws IOException, InterruptedException {
-
-            int dimension = context.getConfiguration().getInt("dimensions", -1);
-            if (dimension == -1){
-                throw new IllegalArgumentException(
-                    String.format("Dimensions cannot be negative %d", dimension)
-                );
-            }
-            Point newCentroid = Point.average(cluster, dimension);
+            
+            // set the new centroid as the average of the cluster
+            Point newCentroid = Point.average(cluster);
             context.write(key, newCentroid);
         }
     }
-
 }
