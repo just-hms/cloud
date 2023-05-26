@@ -1,22 +1,30 @@
-# cloud
+# Cloud
 
 Cloud computing project
 
-# install
+# Install
 
 ```shell
 sudo apt install openjdk-8-jdk
 sudo apt install maven
 ```
 
-# compile
+# 🚀 Run
+
+```shell
+./run.sh path_to_starting_points.csv path_to_dataset.csv
+```
+
+# 🥃 Old fashioned
+
+## Compile
 
 ```shell
 # go where the pom file is
 mvn clean package
 ```
 
-# deploy
+## Deploy
 
 ```shell
 # go where the pom file is
