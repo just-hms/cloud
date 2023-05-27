@@ -12,7 +12,7 @@ sudo apt install maven
 # 🚀 Run
 
 ```shell
-./run.sh path_to_starting_points.csv path_to_dataset.csv
+./run.sh path/to/starting_points.csv path/to/dataset.csv
 ```
 
 # 🥃 Old fashioned
