@@ -54,7 +54,7 @@ public class HadoopUtil {
             // ```
             // key1 1.01;23.31;-12
             // ```
-            
+
             newcentroids.add(Point.parsePoint(line.split("\t")[1]));
 
             // Close the input stream
@@ -69,7 +69,7 @@ public class HadoopUtil {
         job.setJarByClass(KMeansHadoop.class);
         job.setMapperClass(KMeansMapper.class);
 
-        // job.setCombinerClass(KMeansReducer.class);
+        job.setCombinerClass(KMeansReducer.class);
         job.setReducerClass(KMeansReducer.class);
 
         job.setOutputKeyClass(IntWritable.class);
