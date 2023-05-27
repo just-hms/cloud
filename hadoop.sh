@@ -3,7 +3,7 @@ OUTPUT="data/$(uuidgen)"
 JAR="cloud-1.0-SNAPSHOT.jar"
 SSH_KEY="~/.ssh/keys/cloud/key"
 
-SCRIPT="\033[1;30m[SCRIPT]\033[0m"
+SCRIPT="\033[1;30m[HADOOP.SH]\033[0m"
 # TODO had check for edits
 echo "$SCRIPT Building..."
 mvn clean package
@@ -11,6 +11,8 @@ if [ $? -ne 0 ]; then
     echo failed to build
     exit
 fi
+
+# TODO check if the vpn is working
 
 echo "$SCRIPT Copying .jar and specified files to the remote server"
 rsync -u -e "ssh -i $SSH_KEY" target/$JAR $1 $2 hadoop@cloud-hms:repos
