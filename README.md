@@ -12,7 +12,7 @@ sudo apt install maven
 # 🚀 Run
 
 ```shell
-./run.sh path/to/dataset.csv path/to/outputfolder/ K 
+./run.sh path/to/outputfolder/ path/to/dataset.csv K 
 ```
 
 ## Python
