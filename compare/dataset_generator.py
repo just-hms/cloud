@@ -43,9 +43,9 @@ if __name__ == '__main__':
     values = [
         DatasetSpecs(
             name="first_dataset.csv",
-            n_features=5,
-            n_samples=30,
-            blob_centers=3,
+            n_features=10,
+            n_samples=1_000,
+            blob_centers=7,
             sd=0.5
         ),
         DatasetSpecs(

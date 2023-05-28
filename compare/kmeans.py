@@ -32,7 +32,7 @@ if __name__ == '__main__':
 
     kmeans = KMeans(
         n_clusters=K, random_state=0, 
-        init=start_centroids, tol=0.0001, n_init=1
+        init=start_centroids, tol=0.0001, n_init=1, max_iter=30
     ).fit(data)
     
     elapsed_time = datetime.now() - start_time

@@ -70,7 +70,11 @@ public class Point implements Writable {
     }
 
     // nearest returns the index of the nearest points
-    public int nearest(Point[] points) {
+    public int nearest(Point[] points) throws IllegalArgumentException{
+        if (points.length == 0) {
+            throw new IllegalArgumentException("cannot calculate the nearest of an empty list");
+        }
+
         int nearestIndex = 0;
         double minDistance = this.distance(points[0]);
 
@@ -86,7 +90,7 @@ public class Point implements Writable {
     }
 
     // average returns the average of provided points
-    public static Point average(Iterable<Point> points) {
+    public static Point average(Iterable<Point> points) throws IllegalArgumentException {
         Iterator<Point> iterator = points.iterator();
         if (!iterator.hasNext()) {
             throw new IllegalArgumentException("Cannot compute average of an empty iterable of points.");
