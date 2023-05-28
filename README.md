@@ -12,7 +12,27 @@ sudo apt install maven
 # 🚀 Run
 
 ```shell
-./run.sh path/to/starting_points.csv path/to/dataset.csv
+./run.sh path/to/dataset.csv path/to/outputfolder/ K 
+```
+
+## Python
+
+### `dataset_generator.py`
+
+```shell
+py dataset_generator.py path/to/output/folder
+```
+
+### `kmeans.py`
+
+```shell
+py kmeans.py path/to/dataset.csv path/to/output/folder 5 
+```
+
+## Hadoop
+
+```shell
+./hadoop.sh path/to/starting_points.csv path/to/dataset.csv
 ```
 
 # 🥃 Old fashioned
