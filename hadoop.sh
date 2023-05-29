@@ -42,5 +42,4 @@ rsync -e "ssh -i $SSH_KEY" -r hadoop@cloud-hms:repos/hadoop.stats hadoop@cloud-h
 
 if [ $? -ne 0 ]; then
     touch $OUTPUT/hadoop.stats
-    echo "failed" >> $OUTPUT/hadoop.stats
 fi
