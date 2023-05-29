@@ -36,7 +36,7 @@ public class Point implements Writable {
             coordinates.add(Double.parseDouble(tokenizer.nextToken()));
         }
 
-        if (coordinates.size() == 0) {
+        if (coordinates.isEmpty()) {
             throw new IllegalArgumentException("a point cannot be empty");
         }
 

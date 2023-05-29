@@ -21,7 +21,7 @@ public class KMeansHadoop {
 
             centroids = new Point[centroidCfg.length];
             for (int i = 0; i < centroidCfg.length; i++) {
-                if (centroidCfg[i] == "") {
+                if (centroidCfg[i].isEmpty()) {
                     throw new IllegalArgumentException(
                         String.format("Provided empty centroid")
                     );

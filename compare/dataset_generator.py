@@ -54,6 +54,13 @@ if __name__ == '__main__':
             n_samples=30,
             blob_centers=3,
             sd=0.5
+        ),
+        DatasetSpecs(
+            name="big.csv",
+            n_features=10,
+            n_samples=5_000,
+            blob_centers=18,
+            sd=0.9
         ),      
     ]
 
