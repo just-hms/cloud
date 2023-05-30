@@ -39,7 +39,7 @@ public class Main {
         
         // set the costants
         final int maxIter = 30;
-        final Double tol = 0.0001;
+        final double tol = 0.0001;
         final int K = centroids.length;
 
         // start k-means
@@ -80,7 +80,7 @@ public class Main {
             Point[] newcentroids = HadoopUtil.extractResult(cfg, output, K);
 
             // get the distance between the new and the last centroids
-            Double distance = 0.0;
+            float distance = 0.0f;
             for (int j = 0; j < K; j++) {
                 distance+=newcentroids[j].distance(centroids[j]);
             }

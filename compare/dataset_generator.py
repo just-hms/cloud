@@ -23,7 +23,8 @@ def generate_dataset(values : list[DatasetSpecs], folder_path : str):
             centers=value.blob_centers,
             cluster_std=value.sd,
             n_features=value.n_features,
-            random_state=0
+            random_state=0,
+            center_box=[-2000, +2000]
         )
 
         filename = os.path.join(folder_path, value.name)
@@ -53,7 +54,7 @@ if __name__ == '__main__':
             n_features=5,
             n_samples=30,
             blob_centers=3,
-            sd=0.5
+            sd=0.5,
         ),
         DatasetSpecs(
             name="big.csv",
