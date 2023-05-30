@@ -1,44 +1,16 @@
-# TODO get this as input
-OUTPUT="data/$(uuidgen)"
-JAR="cloud-1.0-SNAPSHOT.jar"
-SSH_KEY="~/.ssh/keys/cloud/key"
+# creating output folder
+# $1 output folder
+# $2 dataset
+# $3 K used for kmeans
 
-SCRIPT="\033[1;30m[SCRIPT]\033[0m"
-# TODO had check for edits
-echo "$SCRIPT Building..."
-mvn clean package
-if [ $? -ne 0 ]; then
-    echo failed to build
-    exit
-fi
+mkdir -p $1
 
-echo "$SCRIPT Copying .jar and specified files to the remote server"
-rsync -u -e "ssh -i $SSH_KEY" target/$JAR $1 $2 hadoop@cloud-hms:repos
-if [ $? -ne 0 ]; then
-    echo failed to copy
-    exit
-fi
+# storing used conf
+echo "Dataset: $2" >> $1/.conf
+echo "K: $3" >> $1/.conf
 
-centroidsFilename="${1##*/}"
-datset="${2##*/}"
+# running python
+./python.sh $1 $2 $3  
 
-echo "$SCRIPT Running Hadoop job"
-ssh hadoop@cloud-hms << EOF
-    cd repos
-    /opt/hadoop/bin/hdfs dfs -rm -r output
-
-    /opt/hadoop/bin/hdfs dfs -put -f $centroidsFilename
-    /opt/hadoop/bin/hdfs dfs -put -f $datset
-    
-    /opt/hadoop/bin/hadoop jar $JAR $centroidsFilename $datset output $3
-EOF
-
-
-echo "$SCRIPT Download hadoop results into $OUTPUT"
-mkdir -p $OUTPUT
-rsync -e "ssh -i $SSH_KEY" -r hadoop@cloud-hms:repos/hadoop.stats hadoop@cloud-hms:repos/hadoop.out.csv $OUTPUT
-
-if [ $? -ne 0 ]; then
-    touch $OUTPUT/hadoop.stats
-    echo "failed" >> $OUTPUT/hadoop.stats
-fi
+# running hadoop
+./hadoop.sh $1/start.csv $2 $1

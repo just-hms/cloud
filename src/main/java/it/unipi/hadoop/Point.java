@@ -8,70 +8,79 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
-
 import org.apache.hadoop.io.Writable;
-
 
 public class Point implements Writable {
 
     private static final String delim = ";";
-    private Double[] position;
+    private float[] coordinates;
+    private int weight = 1;
 
     public Point() {}
 
-    public Point(Double[] position) {
-        this.position = position;
+    public Point(float[] coordinates, int weight) {
+        this.coordinates = coordinates;
+        this.weight = weight;
     }
 
     // size returns the size of the point
     public int size() {
-        return position.length;
+        return coordinates.length;
     }
 
     // parsePoint given a point formatted in csv returns a point
-    public static Point parsePoint(String value) throws IllegalArgumentException{
-        List<Double> position = new ArrayList<>();
+    public static Point parsePoint(String value) throws IllegalArgumentException {
+        List<Float> coordinates = new ArrayList<>();
         StringTokenizer tokenizer = new StringTokenizer(value, delim);
         while (tokenizer.hasMoreTokens()) {
-            position.add(Double.parseDouble(tokenizer.nextToken()));
+            coordinates.add(Float.parseFloat(tokenizer.nextToken()));
         }
-        
-        if (position.size() == 0){
-            throw new IllegalArgumentException("a point cannot be empty");
+    
+        if (coordinates.isEmpty()) {
+            throw new IllegalArgumentException("A point cannot be empty.");
         }
-
-        return new Point(position.toArray(new Double[0]));
+    
+        float[] coordinatesArray = new float[coordinates.size()];
+        for (int i = 0; i < coordinates.size(); i++) {
+            coordinatesArray[i] = coordinates.get(i);
+        }
+    
+        return new Point(coordinatesArray, 1);
     }
     
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         String prefix = "";
-        for (Double d : this.position) {
+        for (float d : this.coordinates) {
             sb.append(prefix);
             prefix = delim;
             sb.append(d);
         }
         return sb.toString();
     }
-    
+
     // distance returns the euclidean distance between the point and another one
-    public double distance(Point other) throws IllegalArgumentException{
+    public float distance(Point other) throws IllegalArgumentException {
         if (this.size() != other.size()) {
             throw new IllegalArgumentException(
-                String.format("Data points have different dimensions %s %s", this.toString(),  other.toString())
-            );
+                    String.format("Data points have different dimensions %s %s", this.toString(), other.toString()));
         }
 
-        double squaredSum = 0.0;
+        float squaredSum = 0.0f;
         for (int i = 0; i < this.size(); i++) {
-            squaredSum += Math.pow(this.position[i] - other.position[i], 2);
+            squaredSum += Math.pow(this.coordinates[i] - other.coordinates[i], 2);
         }
-        return Math.sqrt(squaredSum);
+        return (float) Math.sqrt(squaredSum);
     }
 
     // nearest returns the index of the nearest points
-    public int nearest(Point[] points) {
+    public int nearest(Point[] points) throws IllegalArgumentException{
+        if (points.length == 0) {
+            throw new IllegalArgumentException("cannot calculate the nearest of an empty list");
+        }
+
         int nearestIndex = 0;
         double minDistance = this.distance(points[0]);
 
@@ -87,56 +96,54 @@ public class Point implements Writable {
     }
 
     // average returns the average of provided points
-    public static Point average(Iterable<Point> points) {
+    public static Point average(Iterable<Point> points) throws IllegalArgumentException {
         Iterator<Point> iterator = points.iterator();
         if (!iterator.hasNext()) {
             throw new IllegalArgumentException("Cannot compute average of an empty iterable of points.");
         }
-
-        // read out the first point to get the dimension
+    
+        // Read out the first point to get the dimension and weight
         Point firstPoint = iterator.next();
-        int dimension = firstPoint.size();
-        Double[] centerPosition = new Double[dimension];
-        for (int i = 0; i < centerPosition.length; i++) {
-            centerPosition[i] = firstPoint.position[i];
+        final int dimension = firstPoint.size();
+        float[] centerCoordinates = new float[dimension];
+        for (int i = 0; i < centerCoordinates.length; i++) {
+            centerCoordinates[i] = firstPoint.coordinates[i] * firstPoint.weight;
         }
-
-
-        int count = 1;
-
+        int totalWeight = firstPoint.weight;
+    
         // Sum up the positions of all points
-        while(iterator.hasNext()) {
-
+        while (iterator.hasNext()) {
             Point point = iterator.next();
-
-            for (int i = 0; i < centerPosition.length; i++) {
-                centerPosition[i] += point.position[i];
+            for (int i = 0; i < dimension; i++) {
+                centerCoordinates[i] += point.coordinates[i] * point.weight;
             }
-            count++;
+            totalWeight += point.weight;
         }
     
-        // Divide the sum by the number of points to get the average
-        for (int i = 0; i < centerPosition.length; i++) {
-            centerPosition[i] /=  count;
+        // Divide the sum by the total weight to get the average
+        for (int i = 0; i < dimension; i++) {
+            centerCoordinates[i] /= totalWeight;
         }
     
-        return new Point(centerPosition);
+        return new Point(centerCoordinates, totalWeight);
     }
-
+    
     @Override
     public void write(DataOutput out) throws IOException {
-        out.writeInt(position.length);
-        for (Double coordinate : position) {
-            out.writeDouble(coordinate);
+        out.writeInt(coordinates.length);
+        for (float coordinate : this.coordinates) {
+            out.writeFloat(coordinate);
         }
+        out.writeInt(this.weight);
     }
 
     @Override
     public void readFields(DataInput in) throws IOException {
         int length = in.readInt();
-        position = new Double[length];
+        this.coordinates = new float[length];
         for (int i = 0; i < length; i++) {
-            position[i] = in.readDouble();
+            coordinates[i] = in.readFloat();
         }
-    }    
+        this.weight = in.readInt();
+    }
 }
