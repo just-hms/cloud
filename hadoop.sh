@@ -27,10 +27,10 @@ fi
 echo "$SCRIPT Running Hadoop job"
 ssh hadoop@cloud-hms << EOF
     cd repos
-    /opt/hadoop/bin/hdfs dfs -rm -r output
+    /opt/hadoop/bin/hadoop fs -rm -r output
 
-    /opt/hadoop/bin/hdfs dfs -put -f $centroidsFilename
-    /opt/hadoop/bin/hdfs dfs -put -f $dataset
+    /opt/hadoop/bin/hadoop fs -put -f $centroidsFilename
+    /opt/hadoop/bin/hadoop fs -put -f $dataset
     
     /opt/hadoop/bin/hadoop jar $JAR $centroidsFilename $dataset output
 EOF
