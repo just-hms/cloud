@@ -3,6 +3,11 @@
 # $2 dataset
 # $3 K used for kmeans
 
+if [ -d "$1" ]; then
+    echo "Folder already exists. Exiting..."
+    exit 1
+fi
+
 mkdir -p $1
 
 # storing used conf

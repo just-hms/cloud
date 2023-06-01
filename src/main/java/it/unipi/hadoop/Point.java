@@ -68,11 +68,11 @@ public class Point implements Writable {
                     String.format("Data points have different dimensions %s %s", this.toString(), other.toString()));
         }
 
-        double squaredSum = 0.0f;
+        double squaredSum = 0.0;
         for (int i = 0; i < this.size(); i++) {
             squaredSum += Math.pow(this.coordinates[i] - other.coordinates[i], 2);
         }
-        return (double) Math.sqrt(squaredSum);
+        return Math.sqrt(squaredSum);
     }
 
     // nearest returns the index of the nearest points

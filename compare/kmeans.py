@@ -19,7 +19,7 @@ if __name__ == '__main__':
     K = int(sys.argv[3])
 
     # read the data
-    data = np.loadtxt(dataset, delimiter=";", dtype=double)
+    data = np.loadtxt(dataset, delimiter=";", dtype=float)
 
     # Save start data
     start_centroids = get_random_points(data, K)
