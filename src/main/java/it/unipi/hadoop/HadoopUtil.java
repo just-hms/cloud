@@ -4,8 +4,6 @@ import org.apache.hadoop.fs.FileStatus;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.hadoop.fs.FileSystem;
 
@@ -61,12 +59,7 @@ public class HadoopUtil {
             // Close the input stream
             br.close();
         }
-
-        for (Point point : newcentroids) {
-            if (point == null){
-                throw new IOException("one centroid is empty");
-            }
-        }
+        
         return newcentroids;
     }
 

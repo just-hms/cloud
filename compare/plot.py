@@ -37,11 +37,11 @@ if __name__ == '__main__':
 
 
     # read the data
-    data = np.loadtxt(filename, delimiter=";", dtype=float)
+    data = np.loadtxt(filename, delimiter=";", dtype=double)
     print(data)
 
     # read the centroids
-    centroids = np.loadtxt(path_centroids, delimiter=";", dtype=float)
+    centroids = np.loadtxt(path_centroids, delimiter=";", dtype=double)
     print(centroids)
 
     labels = assign_labels_to_points(centroids, data)

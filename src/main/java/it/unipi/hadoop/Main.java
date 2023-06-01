@@ -80,7 +80,7 @@ public class Main {
             Point[] newcentroids = HadoopUtil.extractResult(cfg, output, K);
 
             // get the distance between the new and the last centroids
-            float distance = 0.0f;
+            double distance = 0.0;
             for (int j = 0; j < K; j++) {
                 distance+=newcentroids[j].distance(centroids[j]);
             }

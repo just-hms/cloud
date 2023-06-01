@@ -9,7 +9,7 @@ from sklearn.cluster import KMeans
 from sklearn.datasets import make_blobs
 
 class DatasetSpecs:
-    def __init__(self, name : str, n_features : int, n_samples : int, blob_centers : int, sd : float, box : tuple[float , float]):
+    def __init__(self, name : str, n_features : int, n_samples : int, blob_centers : int, sd : double, box : tuple[double , double]):
         self.name = name
         self.n_features = n_features
         self.n_samples = n_samples

@@ -13,12 +13,12 @@ import org.apache.hadoop.io.Writable;
 public class Point implements Writable {
 
     private static final String delim = ";";
-    private float[] coordinates;
+    private double[] coordinates;
     private int weight = 1;
 
     public Point() {}
 
-    public Point(float[] coordinates, int weight) {
+    public Point(double[] coordinates, int weight) {
         this.coordinates = coordinates;
         this.weight = weight;
     }
@@ -30,17 +30,17 @@ public class Point implements Writable {
 
     // parsePoint given a point formatted in csv returns a point
     public static Point parsePoint(String value) throws IllegalArgumentException {
-        List<Float> coordinates = new ArrayList<>();
+        List<Double> coordinates = new ArrayList<>();
         StringTokenizer tokenizer = new StringTokenizer(value, delim);
         while (tokenizer.hasMoreTokens()) {
-            coordinates.add(Float.parseFloat(tokenizer.nextToken()));
+            coordinates.add(Double.parseDouble(tokenizer.nextToken()));
         }
     
         if (coordinates.isEmpty()) {
             throw new IllegalArgumentException("A point cannot be empty.");
         }
     
-        float[] coordinatesArray = new float[coordinates.size()];
+        double[] coordinatesArray = new double[coordinates.size()];
         for (int i = 0; i < coordinates.size(); i++) {
             coordinatesArray[i] = coordinates.get(i);
         }
@@ -53,7 +53,7 @@ public class Point implements Writable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         String prefix = "";
-        for (float d : this.coordinates) {
+        for (double d : this.coordinates) {
             sb.append(prefix);
             prefix = delim;
             sb.append(d);
@@ -62,17 +62,17 @@ public class Point implements Writable {
     }
 
     // distance returns the euclidean distance between the point and another one
-    public float distance(Point other) throws IllegalArgumentException {
+    public double distance(Point other) throws IllegalArgumentException {
         if (this.size() != other.size()) {
             throw new IllegalArgumentException(
                     String.format("Data points have different dimensions %s %s", this.toString(), other.toString()));
         }
 
-        float squaredSum = 0.0f;
+        double squaredSum = 0.0f;
         for (int i = 0; i < this.size(); i++) {
             squaredSum += Math.pow(this.coordinates[i] - other.coordinates[i], 2);
         }
-        return (float) Math.sqrt(squaredSum);
+        return (double) Math.sqrt(squaredSum);
     }
 
     // nearest returns the index of the nearest points
@@ -105,7 +105,7 @@ public class Point implements Writable {
         // Read out the first point to get the dimension and weight
         Point firstPoint = iterator.next();
         final int dimension = firstPoint.size();
-        float[] centerCoordinates = new float[dimension];
+        double[] centerCoordinates = new double[dimension];
         for (int i = 0; i < centerCoordinates.length; i++) {
             centerCoordinates[i] = firstPoint.coordinates[i] * firstPoint.weight;
         }
@@ -131,8 +131,8 @@ public class Point implements Writable {
     @Override
     public void write(DataOutput out) throws IOException {
         out.writeInt(coordinates.length);
-        for (float coordinate : this.coordinates) {
-            out.writeFloat(coordinate);
+        for (double coordinate : this.coordinates) {
+            out.writeDouble(coordinate);
         }
         out.writeInt(this.weight);
     }
@@ -140,9 +140,9 @@ public class Point implements Writable {
     @Override
     public void readFields(DataInput in) throws IOException {
         int length = in.readInt();
-        this.coordinates = new float[length];
+        this.coordinates = new double[length];
         for (int i = 0; i < length; i++) {
-            coordinates[i] = in.readFloat();
+            coordinates[i] = in.readDouble();
         }
         this.weight = in.readInt();
     }
