@@ -25,7 +25,7 @@ def assign_labels_to_points(centroids, points):
 
 def plot_data(data, centroids, labels, outputfile):
     # Define the new color palette and symbol for centroids
-    colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#000000']
+    colors = ['#93B5C6', '#5E5768', '#F0CF65', '#DB93B0', '#DD6E42', '#588157', '#54428E']
 
     # Assign colors
     label_colors = [colors[label] for label in labels]
