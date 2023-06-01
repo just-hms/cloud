@@ -43,22 +43,23 @@ if __name__ == '__main__':
         sys.exit(1)
 
     values = [
-        DatasetSpecs(
-            name="example-non-overlapping.csv",
-            n_features=2,
-            n_samples=10_000,
-            blob_centers=[[500, 500], [-500, -500], [-500, 500], [500, -500]],
-            sd=100,
-            box=[-1000, 1000]
-        ),
-        DatasetSpecs(
-            name="example-overlapping.csv",
-            n_features=2,
-            n_samples=10_000,
-            blob_centers=[[250, 250], [-250, -250], [-250, 250], [250, -250]],
-            sd=500,
-            box=[-1000, 1000]
-        )
+        # DatasetSpecs(
+        #     name="example-non-overlapping.csv",
+        #     n_features=2,
+        #     n_samples=10_000,
+        #     blob_centers=[[500, 500], [-500, -500], [-500, 500], [500, -500]],
+        #     sd=100,
+        #     box=[-1000, 1000]
+        # ),
+        # DatasetSpecs(
+        #     name="example-overlapping.csv",
+        #     n_features=2,
+        #     n_samples=10_000,
+        #     blob_centers=[[250, 250], [-250, -250], [-250, 250], [250, -250]],
+        #     sd=500,
+        #     box=[-1000, 1000]
+        # )
+        
     ]
 
     generate_dataset(values, folder_path)
