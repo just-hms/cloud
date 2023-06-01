@@ -95,7 +95,12 @@ public class Main {
             }
 
             // if not do another iteration with the new centroids
-            centroids = newcentroids;
+
+            for (int i = 0; i < centroids.length; i++) {
+                if (newcentroids[i] != null){
+                    centroids[i] = newcentroids[i];     
+                }
+            }
         }
         Duration executionTime = Duration.between(start, Instant.now());
         
