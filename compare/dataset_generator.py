@@ -8,6 +8,15 @@ import math
 from sklearn.cluster import KMeans
 from sklearn.datasets import make_blobs
 
+def generate_random_points(num_points, num_features):
+    min_value = -750
+    max_value = 750
+    
+    # Generate random points
+    random_points = np.random.uniform(min_value, max_value, size=(num_points, num_features))
+    
+    return random_points
+
 class DatasetSpecs:
     def __init__(self, name : str, n_features : int, n_samples : int, blob_centers : int, sd : float, box : tuple[float , float]):
         self.name = name
@@ -129,21 +138,28 @@ if __name__ == '__main__':
         #     sd=250,
         #     box=[-1000, 1000]
         # ),
+        # DatasetSpecs(
+        #     name="dataset_10000000_10_5.csv",
+        #     n_features=10,
+        #     n_samples=10_000_000,
+        #     blob_centers=[
+        #         [250, 250, 250, 250, 250, 250, 250, 250, 250, 250], 
+        #         [250, 250, 250, 250, 250, -250, -250, -250, -250, -250],
+        #         [-250, -250, -250, -250, -250, 250, 250, 250, 250, 250],
+        #         [-250, 250, -250, 250, -250, 250, -250, 250, -250, 250],
+        #         [-250, -250, -250, -250, -250, -250, -250, -250, -250, -250]
+        #     ],
+        #     sd=250,
+        #     box=[-1000, 1000]
+        # ),
         DatasetSpecs(
-            name="dataset_10000000_10_5.csv",
+            name="dataset_500_000_10_20.csv",
             n_features=10,
-            n_samples=10_000_000,
-            blob_centers=[
-                [250, 250, 250, 250, 250, 250, 250, 250, 250, 250], 
-                [250, 250, 250, 250, 250, -250, -250, -250, -250, -250],
-                [-250, -250, -250, -250, -250, 250, 250, 250, 250, 250],
-                [-250, 250, -250, 250, -250, 250, -250, 250, -250, 250],
-                [-250, -250, -250, -250, -250, -250, -250, -250, -250, -250]
-            ],
+            n_samples=500_000,
+            blob_centers=generate_random_points(20, 10),
             sd=250,
             box=[-1000, 1000]
         ),
-        
     ]
 
     generate_dataset(values, folder_path)
