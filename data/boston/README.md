@@ -1,9 +1,4 @@
 # Boston
 
-this are the run with the boston-housing dataset
+launching Hadoop with and without combiners while encreasing the number of K
 
-- [x] run using combiners
-
-- [ ] run without combiners
-
-    use directly the `hadoop.sh` script

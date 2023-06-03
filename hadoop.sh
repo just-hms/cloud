@@ -18,7 +18,13 @@ fi
 # TODO check if the vpn is working
 
 echo "$SCRIPT Copying .jar and specified files to the remote server"
-rsync -u -e "ssh -i $SSH_KEY" target/$JAR $1 $2 hadoop@cloud-hms:repos
+rsync -u -e "ssh -i $SSH_KEY" target/$JAR $1 hadoop@cloud-hms:repos
+if [ $? -ne 0 ]; then
+    echo failed to copy
+    exit
+fi
+
+rsync -e "ssh -i $SSH_KEY" $1 hadoop@cloud-hms:repos
 if [ $? -ne 0 ]; then
     echo failed to copy
     exit
