@@ -68,7 +68,7 @@ public class HadoopUtil {
         job.setJarByClass(KMeansHadoop.class);
         job.setMapperClass(KMeansMapper.class);
 
-        // job.setCombinerClass(KMeansReducer.class);
+        job.setCombinerClass(KMeansReducer.class);
         job.setReducerClass(KMeansReducer.class);
 
         job.setOutputKeyClass(IntWritable.class);
