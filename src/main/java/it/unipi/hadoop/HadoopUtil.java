@@ -75,7 +75,7 @@ public class HadoopUtil {
         job.setOutputValueClass(Point.class);
 
         // Set the number of reducers to K
-        int maxreducers = 5;        
+        int maxreducers = 10;        
         job.setNumReduceTasks(K < maxreducers ? K : maxreducers);
 
         FileInputFormat.addInputPath(job, input);
