@@ -153,7 +153,7 @@ if __name__ == '__main__':
         #     box=[-1000, 1000]
         # ),
         DatasetSpecs(
-            name="dataset_500_000_10_20.csv",
+            name="dataset_100_000_10_10.csv",
             n_features=10,
             n_samples=500_000,
             blob_centers=[
