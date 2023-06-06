@@ -1,6 +1,6 @@
 K;Iterations;time[ms];dataset
-5;4;19.009;dataset/dataset_100_10_5.csv
-5;8;20.289;dataset/dataset_1000_10_5.csv
-5;8;30.491;dataset/dataset_10000_10_5.csv
-5;4;96.358;dataset/dataset_100000_10_5.csv
-5;7;934.681;dataset/dataset_1000000_10_5.csv
+5;4;11.667;dataset/dataset_100_10_5.csv
+5;8;23.820;dataset/dataset_1000_10_5.csv
+5;8;35.568;dataset/dataset_10000_10_5.csv
+5;4;244.518;dataset/dataset_100000_10_5.csv
+5;7;2307.061;dataset/dataset_1000000_10_5.csv

@@ -38,7 +38,7 @@ public class Main {
                 .toArray(Point[]::new);
         
         // set the costants
-        final int maxIter = 50;
+        final int maxIter = 100;
         final double tol = 0.0001;
         final int K = centroids.length;
 
