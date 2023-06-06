@@ -128,7 +128,6 @@ if __name__ == '__main__':
         True, x_label, y_label_percentage
     )
 
-
     # read the python centroids
     plot_data(
         sizes, iterations, 
