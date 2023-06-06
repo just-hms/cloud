@@ -4,4 +4,4 @@ K;Iterations;time[ms]
 5;9;221024;dataset/dataset_10000_10_5.csv
 5;4;99532;dataset/dataset_100000_10_5.csv
 5;17;543783;dataset/dataset_1000000_10_5.csv.csv
-5;17;2185360;dataset/dataset_10000000_10_5.csv.csv
+5;17;1069304;dataset/dataset_10000000_10_5.csv.csv
