@@ -4,8 +4,6 @@ import org.apache.hadoop.fs.FileStatus;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.hadoop.fs.FileSystem;
 
@@ -61,12 +59,7 @@ public class HadoopUtil {
             // Close the input stream
             br.close();
         }
-
-        for (Point point : newcentroids) {
-            if (point == null){
-                throw new IOException("one centroid is empty");
-            }
-        }
+        
         return newcentroids;
     }
 
@@ -82,7 +75,8 @@ public class HadoopUtil {
         job.setOutputValueClass(Point.class);
 
         // Set the number of reducers to K
-        job.setNumReduceTasks(K < 10 ? K : 10);
+        int maxreducers = 10;        
+        job.setNumReduceTasks(K < maxreducers ? K : maxreducers);
 
         FileInputFormat.addInputPath(job, input);
         FileOutputFormat.setOutputPath(job, output);

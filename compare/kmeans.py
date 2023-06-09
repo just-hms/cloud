@@ -19,6 +19,8 @@ if __name__ == '__main__':
     K = int(sys.argv[3])
 
     # read the data
+    start_time = datetime.now()
+
     data = np.loadtxt(dataset, delimiter=";", dtype=float)
 
     # Save start data
@@ -28,11 +30,10 @@ if __name__ == '__main__':
     
     # Runs Kmeans and measures execution time
     # -------------
-    start_time = datetime.now()
 
     kmeans = KMeans(
         n_clusters=K, random_state=0, 
-        init=start_centroids, tol=0.0001, n_init=1, max_iter=30
+        init=start_centroids, tol=0.0001, n_init=1, max_iter=100
     ).fit(data)
     
     elapsed_time = datetime.now() - start_time
@@ -50,5 +51,5 @@ if __name__ == '__main__':
     # Save the statistics
     stats_filename = os.path.join(out_folder, "kmeans.stats")
     with open(stats_filename, "w", encoding="utf-8") as out:
-        out.write("Execution Time: " + str(elapsed_time.microseconds/1000) + "ms\n")
+        out.write("Execution Time: " + str(elapsed_time.seconds*1000 + elapsed_time.microseconds/1000) +"ms\n")
         out.write("Number of Iterations: " + str(iterations) + "\n")

@@ -1,6 +1,4 @@
-data/*
-!data/.gitkeep
-
 target/
+dataset/
 
 .venv/

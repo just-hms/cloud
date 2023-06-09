@@ -1,0 +1,6 @@
+K;Iterations;time[ms]
+5;4;94081;dataset/dataset_100_10_5.csv
+5;8;189335;dataset/dataset_1000_10_5.csv
+5;9;221024;dataset/dataset_10000_10_5.csv
+5;4;99532;dataset/dataset_100000_10_5.csv
+5;17;543783;dataset/dataset_1000000_10_5.csv

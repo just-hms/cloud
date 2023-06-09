@@ -38,7 +38,7 @@ public class Main {
                 .toArray(Point[]::new);
         
         // set the costants
-        final int maxIter = 30;
+        final int maxIter = 100;
         final double tol = 0.0001;
         final int K = centroids.length;
 
@@ -80,7 +80,7 @@ public class Main {
             Point[] newcentroids = HadoopUtil.extractResult(cfg, output, K);
 
             // get the distance between the new and the last centroids
-            float distance = 0.0f;
+            double distance = 0.0;
             for (int j = 0; j < K; j++) {
                 distance+=newcentroids[j].distance(centroids[j]);
             }
@@ -95,7 +95,12 @@ public class Main {
             }
 
             // if not do another iteration with the new centroids
-            centroids = newcentroids;
+
+            for (int i = 0; i < centroids.length; i++) {
+                if (newcentroids[i] != null){
+                    centroids[i] = newcentroids[i];     
+                }
+            }
         }
         Duration executionTime = Duration.between(start, Instant.now());
         
